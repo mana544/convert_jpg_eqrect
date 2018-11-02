@@ -14,10 +14,6 @@ Exif以外のAPP1(xmp)セグメントが元々埋め込まれている場合は�
 Python(Anaconda) 3.6.4(5.1.0)
 tkinter 8.6
 '''
-# ▼▼▼ 設定値ココカラ ▼▼▼
-# jpgfilename = "正距円筒図グリッド.jpg"
-# out_jpgfilename = "正距円筒図グリッド_out.jpg"
-# ▲▲▲ 設定値ココマデ ▲▲▲
 
 # ファイル選択ダイアログの表示
 root = tkinter.Tk()
