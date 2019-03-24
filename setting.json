@@ -1,0 +1,11 @@
+{
+    "convert_jpg_eqrect": {
+        "txtVal_CroppedAreaImageHeightPixels": "2688",
+        "txtVal_CroppedAreaImageWidthPixels": "5376",
+        "txtVal_CroppedAreaLeftPixels": "0",
+        "txtVal_CroppedAreaTopPixels": "0",
+        "txtVal_FullPanoHeightPixels": "2688",
+        "txtVal_FullPanoWidthPixels": "5376",
+        "txtVal_filename": "全天球イラストを選択してください..."
+    }
+}
