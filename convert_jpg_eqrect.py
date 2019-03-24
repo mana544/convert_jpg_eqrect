@@ -8,6 +8,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import ttk
 import json
+import threading
 
 '''
 JPEGファイル内に全天球情報(APP1 Photo Sphere XMP)を埋め込む。
@@ -20,10 +21,19 @@ Python(Anaconda) 3.6.4(5.1.0)
 tkinter 8.6
 '''
 
-# ファイル選択ダイアログの表示
-def btn_fileopen_action():
-    root = tkinter.Tk()
-    root.withdraw()
+
+# ファイ選択ダイアログコールバック
+def btn_fileopen_callback():
+    # ファイル選択アクションが重たくて、いつまで経ってもreturnされないので、
+    # アクション本体は別スレッドで実行
+    th = threading.Thread(target=fileopen_action)
+    th.start()
+
+# ファイル選択
+def fileopen_action():
+    # ブランクウインドウ出現時の回避策
+    # root = tkinter.Tk()
+    # root.withdraw()
     fTyp = [("JPEG File","*.jpg")]
     iDir = os.path.abspath(os.path.dirname(__file__))
     jpgfilename = filedialog.askopenfilename(filetypes = fTyp,initialdir = iDir)
@@ -98,7 +108,7 @@ def loadSetting(section):
     return setting[section]
 
 # 処理実行
-def btn_execute_action():
+def btn_execute_action(event):
     print("***** 全天球イラストJPEGメタデータ埋め込み処理開始 *****")
     # GUIインプット情報から数値変換
     FullPanoWidthPixels = int(txtVal_FullPanoWidthPixels.get())
@@ -143,11 +153,12 @@ def btn_execute_action():
 
     xmp_length = 1136-len(xmp_b)
     if xmp_length >= 0:
-        print('{}byte padding.'.format(xmp_length))
-        for i in range(xmp_length):
+        print('APP1(Photosphere XMP) {}byte padding.'.format(xmp_length))
+        for _ in range(xmp_length):
             xmp_b += b'\x20'
     else:
         print('確保しているバイトを越える設定値です。')
+        return
 
     # ファイル読み込み開始
     with open(jpgfilename, mode='rb') as f:
@@ -238,6 +249,12 @@ def btn_execute_action():
                             xXMP_W = True
 
     print('Output File: %s' % (out_jpgfilename, ))
+    messagebox.showinfo('埋め込み完了','JPEGファイルに全天球情報を埋め込みました。\n出力ファイル名は{}です。'.format(out_jpgfilename))
+
+
+def window_close_action():
+    root.destroy()
+    print('ウインドウ閉じる')
 
 
 if __name__ == '__main__':
@@ -296,10 +313,15 @@ if __name__ == '__main__':
     # ★★★★★★★
     # ★ ボタン ★
     # ★★★★★★★
-    btn_fileopen = ttk.Button(frm, text=u'全天球イラスト選択...', command=btn_fileopen_action)
-    btn_execute = ttk.Button(frm, text=u'メタデータ埋め込み', command=btn_execute_action)
+    btn_fileopen = ttk.Button(frm, text=u'全天球イラスト選択...', command=btn_fileopen_callback)
+    btn_execute = ttk.Button(frm, text=u'メタデータ埋め込み')
     btn_savesetting = ttk.Button(frm, text=u'設定保存', command=btn_saveSetting_action)
     
+    # ★★★★★★★★
+    # ★ イベント ★
+    # ★★★★★★★★
+    btn_execute.bind("<ButtonRelease-1>", btn_execute_action) 
+
     # ★★★★★★★★★
     # ★ レイアウト ★
     # ★★★★★★★★★
@@ -321,4 +343,5 @@ if __name__ == '__main__':
     btn_savesetting.grid(row=8, column=0, sticky='W')
     btn_execute.grid(row=8, column=1, sticky='E')
 
+    root.protocol("WM_DELETE_WINDOW", window_close_action)
     root.mainloop()
