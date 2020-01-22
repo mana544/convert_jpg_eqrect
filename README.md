@@ -3,7 +3,7 @@
 
 ---
 ## 概要
-JPEGファイルのヘッダー内(APP1)に全天球情報(Photo Sphere XMP)を埋め込みます。これによって、正距円筒図法(Equirectangular)に則って描かれたイラストは、360°再生対応サービスでVRモード(全天球)再生するようになります。([参考記事](https://www.facebook.com))
+JPEGファイルのヘッダー内(APP1)に全天球情報(Photo Sphere XMP)を埋め込みます。これによって、正距円筒図法(Equirectangular)に則って描かれたイラストは、360°再生対応サービスでVRモード(全天球)再生するようになります。([参考記事](https://qiita.com/mana_544/items/3245ce87f0a0fca80c2a))
 
 ## 動作環境(使用モジュール)
 * Python(Anaconda) 3.6.4(5.1.0)
